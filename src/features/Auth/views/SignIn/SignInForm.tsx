@@ -16,10 +16,16 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { useState } from "react";
+import anime from "animejs";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/swiper-bundle.css";
 import { z } from "zod";
-import BannerCinema from "public/assets/images/bannercinema.jpg";
 
 interface SignIn {
   email: string;
@@ -45,6 +51,42 @@ const SignInForm = () => {
   });
 
   const [isLoading, setLoading] = useState(false);
+  useEffect(() => {
+    function animateText() {
+      var textWrapper = document.querySelector(".ml6 .letters");
+      textWrapper.innerHTML = textWrapper.textContent.replace(
+        /\S/g,
+        "<span class='letter'>$&</span>"
+      );
+
+      anime
+        .timeline({ loop: true })
+        .add({
+          targets: ".ml6 .letter",
+          translateY: [0, -20, 0],
+          translateZ: 0,
+          opacity: [0, 1],
+          duration: 850,
+          easing: "easeOutExpo",
+          delay: (el, i) => 50 * i,
+        })
+        .add(
+          {
+            targets: ".ml6 .letter",
+            translateY: [0, 20, 0],
+            translateZ: 0,
+            opacity: [1, 0],
+            duration: 750,
+            easing: "easeInExpo",
+            delay: (el, i) => 50 * i,
+          },
+          "+=2000"
+        );
+    }
+
+    // Call the function to animate text
+    animateText();
+  }, []);
 
   const onSubmit: SubmitHandler<any> = () => {
     setLoading(true);
@@ -59,14 +101,62 @@ const SignInForm = () => {
     >
       <Box
         sx={{
-          backgroundColor: "blue",
-          backgroundImage: `url(https://images.unsplash.com/photo-1631702825172-a9a848c473ad?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)`,
-          backgroundSize: "cover",
+          backgroundSize: "contain",
           backgroundPosition: "center",
+          objectFit: "contain",
           width: "60%",
           height: "100vh",
         }}
-      ></Box>
+      >
+        <Swiper
+          slidesPerView={1}
+          spaceBetween={30}
+          loop={true}
+          autoplay={{
+            delay: 3000,
+            disableOnInteraction: false,
+          }}
+          modules={[Autoplay]}
+          className="mySwiper"
+        >
+          <SwiperSlide>
+            <Box
+              sx={{
+                backgroundImage: `url(https://img.freepik.com/premium-vector/cinema-movie-time-banner-with-flat-icons-transparent-film-popcorn-signboard-masks-award-tickets-vector-illustration_108855-2649.jpg?w=1380)`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                objectFit: "contain",
+                width: "100%",
+                height: "100vh",
+              }}
+            ></Box>
+          </SwiperSlide>
+          <SwiperSlide>
+            <Box
+              sx={{
+                backgroundImage: `url(https://img.freepik.com/premium-vector/business-man-woman-using-gadget-modern-devices-arrow-finance-success-concept_48369-11583.jpg?w=1480)`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                objectFit: "contain",
+                width: "100%",
+                height: "100vh",
+              }}
+            ></Box>
+          </SwiperSlide>
+          <SwiperSlide>
+            <Box
+              sx={{
+                backgroundImage: `url(https://img.freepik.com/free-vector/super-deal-banner-template-design_87202-1098.jpg?w=1380&t=st=1706610295~exp=1706610895~hmac=5a9a07a6e94575a52a60fd7f9d0ad227b3eb676c7bed396e169e49b49b5d673e)`,
+                backgroundSize: "contain",
+                backgroundPosition: "center",
+                objectFit: "contain",
+                width: "100%",
+                height: "100vh",
+              }}
+            ></Box>
+          </SwiperSlide>
+        </Swiper>
+      </Box>
       <Box
         sx={{
           width: "40%",
@@ -85,17 +175,22 @@ const SignInForm = () => {
           }}
         >
           <Box>
-            <Typography
-              sx={{
-                fontSize: "34px",
-                fontWeight: "bold",
-                fontFamily: "'Comic Sans MS', cursive",
-                color: "#007DFB",
-                mb: 2,
-              }}
-            >
-              Eve-ly
-            </Typography>
+            <h1 className="ml6">
+              <span className="text-wrapper">
+                <span
+                  className="letters"
+                  style={{
+                    fontSize: "34px",
+                    fontWeight: "bold",
+                    fontFamily: "'Comic Sans MS', cursive",
+                    color: "#007DFB",
+                    marginBottom: 2,
+                  }}
+                >
+                  Eve-ly
+                </span>
+              </span>
+            </h1>
             <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
               Đăng nhập vào tài khoản của bạn
             </Typography>
