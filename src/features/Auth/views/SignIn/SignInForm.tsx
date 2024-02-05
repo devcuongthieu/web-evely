@@ -54,6 +54,7 @@ const SignInForm = () => {
   useEffect(() => {
     function animateText() {
       var textWrapper = document.querySelector(".ml6 .letters");
+      // @ts-ignore
       textWrapper.innerHTML = textWrapper.textContent.replace(
         /\S/g,
         "<span class='letter'>$&</span>"
@@ -180,7 +181,7 @@ const SignInForm = () => {
                 <span
                   className="letters"
                   style={{
-                    fontSize: "34px",
+                    fontSize: "44px",
                     fontWeight: "bold",
                     fontFamily: "'Comic Sans MS', cursive",
                     color: "#007DFB",
