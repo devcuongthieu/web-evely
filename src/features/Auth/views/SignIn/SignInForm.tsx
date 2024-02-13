@@ -26,6 +26,10 @@ import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper-bundle.css";
 import { z } from "zod";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 interface SignIn {
   email: string;
@@ -42,6 +46,9 @@ const validate = z.object({
 });
 
 const SignInForm = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const router = useRouter();
   const { control, handleSubmit } = useForm<SignIn>({
     defaultValues: {
       email: "",
@@ -89,9 +96,19 @@ const SignInForm = () => {
     animateText();
   }, []);
 
-  const onSubmit: SubmitHandler<any> = () => {
-    setLoading(true);
-  };
+  const onSubmit = handleSubmit(async (data) => {
+    const response = await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirect: false,
+    });
+
+    if (response?.ok) {
+      router.push("/");
+    }
+    setLoading(false);
+  });
+
   return (
     <Box
       sx={{
@@ -100,67 +117,70 @@ const SignInForm = () => {
         justifyContent: "space-between",
       }}
     >
-      <Box
-        sx={{
-          backgroundSize: "contain",
-          backgroundPosition: "center",
-          objectFit: "contain",
-          width: "60%",
-          height: "100vh",
-        }}
-      >
-        <Swiper
-          slidesPerView={1}
-          spaceBetween={30}
-          loop={true}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
+      {!isMobile && (
+        <Box
+          sx={{
+            backgroundSize: "contain",
+            backgroundPosition: "center",
+            objectFit: "contain",
+            width: "60%",
+            height: "100vh",
           }}
-          modules={[Autoplay]}
-          className="mySwiper"
         >
-          <SwiperSlide>
-            <Box
-              sx={{
-                backgroundImage: `url(https://img.freepik.com/premium-vector/cinema-movie-time-banner-with-flat-icons-transparent-film-popcorn-signboard-masks-award-tickets-vector-illustration_108855-2649.jpg?w=1380)`,
-                backgroundSize: "contain",
-                backgroundPosition: "center",
-                objectFit: "contain",
-                width: "100%",
-                height: "100vh",
-              }}
-            ></Box>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Box
-              sx={{
-                backgroundImage: `url(https://img.freepik.com/premium-vector/business-man-woman-using-gadget-modern-devices-arrow-finance-success-concept_48369-11583.jpg?w=1480)`,
-                backgroundSize: "contain",
-                backgroundPosition: "center",
-                objectFit: "contain",
-                width: "100%",
-                height: "100vh",
-              }}
-            ></Box>
-          </SwiperSlide>
-          <SwiperSlide>
-            <Box
-              sx={{
-                backgroundImage: `url(https://img.freepik.com/free-vector/super-deal-banner-template-design_87202-1098.jpg?w=1380&t=st=1706610295~exp=1706610895~hmac=5a9a07a6e94575a52a60fd7f9d0ad227b3eb676c7bed396e169e49b49b5d673e)`,
-                backgroundSize: "contain",
-                backgroundPosition: "center",
-                objectFit: "contain",
-                width: "100%",
-                height: "100vh",
-              }}
-            ></Box>
-          </SwiperSlide>
-        </Swiper>
-      </Box>
+          <Swiper
+            slidesPerView={1}
+            spaceBetween={30}
+            loop={true}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            modules={[Autoplay]}
+            className="mySwiper"
+            slidesPerGroupSkip={1}
+          >
+            <SwiperSlide>
+              <Box
+                sx={{
+                  backgroundImage: `url(https://img.freepik.com/premium-vector/cinema-movie-time-banner-with-flat-icons-transparent-film-popcorn-signboard-masks-award-tickets-vector-illustration_108855-2649.jpg?w=1380)`,
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
+                  objectFit: "contain",
+                  width: "100%",
+                  height: "100vh",
+                }}
+              ></Box>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Box
+                sx={{
+                  backgroundImage: `url(https://img.freepik.com/premium-vector/business-man-woman-using-gadget-modern-devices-arrow-finance-success-concept_48369-11583.jpg?w=1480)`,
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
+                  objectFit: "contain",
+                  width: "100%",
+                  height: "100vh",
+                }}
+              ></Box>
+            </SwiperSlide>
+            <SwiperSlide>
+              <Box
+                sx={{
+                  backgroundImage: `url(https://img.freepik.com/free-vector/super-deal-banner-template-design_87202-1098.jpg?w=1380&t=st=1706610295~exp=1706610895~hmac=5a9a07a6e94575a52a60fd7f9d0ad227b3eb676c7bed396e169e49b49b5d673e)`,
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
+                  objectFit: "contain",
+                  width: "100%",
+                  height: "100vh",
+                }}
+              ></Box>
+            </SwiperSlide>
+          </Swiper>
+        </Box>
+      )}
       <Box
         sx={{
-          width: "40%",
+          width: isMobile ? "100%" : "40%",
           height: "100vh",
           display: "flex",
           alignItems: "center",
@@ -223,17 +243,16 @@ const SignInForm = () => {
               </ButtonMUI>
             </Box>
             <Divider
-              sx={{ color: "#000", fontSize: "16px" }}
+              sx={{
+                color: "#000",
+                fontSize: "16px",
+                fontFamily: "Roboto, sans-serif",
+              }}
               textAlign="center"
             >
               hoặc tiếp tục với email
             </Divider>
-            <Box
-              component="form"
-              noValidate
-              sx={{ mt: 1 }}
-              onSubmit={handleSubmit(onSubmit)}
-            >
+            <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={onSubmit}>
               <Input
                 fullWidth
                 label="Email"

@@ -1,6 +1,8 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
 import React from "react";
 import Banner from "../Slider/Banner/Banner";
+import Header from "./Header/Header";
+import Footer from "./Footer/Footer";
 
 export default function LayoutAuthenticate({
   children,
@@ -10,7 +12,7 @@ export default function LayoutAuthenticate({
   return (
     <>
       <Container maxWidth="xl">
-        <Box>Header</Box>
+        <Header />
       </Container>
       <Banner />
       <Container maxWidth="xl">
@@ -19,7 +21,7 @@ export default function LayoutAuthenticate({
         </Stack>
       </Container>
       <Box>
-        <Typography>Footer</Typography>
+        <Footer />
       </Box>
     </>
   );
